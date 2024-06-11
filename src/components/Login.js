@@ -3,9 +3,9 @@ import Header from "./Header";
 import { checkValidData } from "../utils/validate";
 import { auth } from "../utils/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
   const [isSignInForm, setIsSignForm] = useState(true);
@@ -14,7 +14,6 @@ const Login = () => {
   const name= useRef(null);
   const email = useRef(null);
   const password = useRef(null);
-  const navigate = useNavigate()
   const dispatch = useDispatch();
 
   const handleButtonClick = () => {
@@ -33,9 +32,8 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(user, {
             displayName: name.current.value, 
-            photoURL: "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.webp"
+            photoURL: USER_AVATAR
           }).then(() => {
-            navigate("/browse");
             const { uid, email, displayName, photoURL } = auth.currentUser;
             dispatch(
                 addUser({ 
@@ -57,8 +55,6 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
-          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;

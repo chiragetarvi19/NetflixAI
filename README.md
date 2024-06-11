@@ -14,6 +14,17 @@
 - Created Redux Store with userSlice
 - Implemented Sign Out
 - Update Profile
+- Bug Fixes- Sign Up/ Sign In and Unsubscribe
+- Added hard coded values to constant files
+- Register for TMDB API and get access token
+- Get data from TMDB API
+- Custom hook for now playing movies
+- Create movieSlice
+- Update store with movies data
+- Fetch data for trailer video
+- Update store with trailer video data
+- Embedded the youtube video
+
 
 
 # Features
