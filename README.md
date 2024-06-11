@@ -24,6 +24,9 @@
 - Fetch data for trailer video
 - Update store with trailer video data
 - Embedded the youtube video
+- Built Secondary Component
+- Built Movie List, Movie Card
+- Created Custom Hooks for different categories of movies
 
 
 
