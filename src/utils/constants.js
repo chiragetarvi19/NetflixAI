@@ -25,3 +25,6 @@ export const SUPPORTED_LANGUAGES = [
   { identifier: "spanish", name: "Spanish" },
   { identifier: "telugu", name: "Telugu" },
 ];
+
+export const OPENAI_KEY = "sk-proj-TpJe5vhWuJd5rZkDoHZ1T3BlbkFJzrq9opD8cVzVKPLn5fEH"
+
