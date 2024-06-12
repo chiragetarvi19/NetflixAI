@@ -27,6 +27,9 @@
 - Built Secondary Component
 - Built Movie List, Movie Card
 - Created Custom Hooks for different categories of movies
+- Created GPT Search Page
+- Created GPT Search Bar
+- Multi-Lingual Feature implemented
 
 
 
