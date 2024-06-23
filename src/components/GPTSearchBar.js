@@ -1,46 +1,39 @@
 import { useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import lang from "../utils/languageConstants";
-import openAI from "../utils/openAI";
-import { API_OPTIONS } from "../utils/constants";
+import { API_OPTIONS, model } from "../utils/constants";
+import { addAIMovieResults } from "../utils/gptSlice";
 
 
 const GPTSearchBar = () => {
   const langKey = useSelector((store) => store.config.lang);
   const searchText = useRef("");
+  const dispatch = useDispatch();
 
-  const gptQuery =
-    "Act as a Movie Recommendation System and suggest some movies for the query" +
+  const searchMovieTMDB = async (movie) => {
+    const data = await fetch(
+      'https://api.themoviedb.org/3/search/movie?query='+movie+'&include_adult=false&language=en-US&page=1',
+      API_OPTIONS
+    );
+    const json = await data.json();
+    return json.results;
+  };
+
+  const handleAISearchClick = async () => {
+
+    const aiQuery="You are a Movie Recommendation System. Suggest some movies for the following query so that I can freshen my mood: " +
     searchText.current.value +
-    ". Only give me names of max 10 movies, comma separated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmal, Koi Mil Gaya";
+    ". Only give me names of max 5 movies, comma separated like the example result given ahead. Example: Movie A, Movie B, Movie C and so on.";
 
-    const searchMovieTMDB = async (movie) => {
-      const data = await fetch(
-        "https://api.themoviedb.org/3/search/" +
-          movie +
-          "?include_adult=false&language=en-US&page=1",
-        API_OPTIONS
-      );
-      const json = await data.json();
-      return json.results;
-    };
+    const result = await model.generateContent(aiQuery);
+    const response = await result.response;
+    const aiResults = response.text();
+    const resultMovies = aiResults?.split(",");
 
+    const promiseArray = await resultMovies.map((movie)=> searchMovieTMDB(movie));
 
-  const handleGPTSearchClick = async () => {
-    console.log(searchText.current.value);
-    const gptResults = await openAI.chat.completions.create({
-      messages: [{ role: "user", content: gptQuery }],
-      model: "gpt-3.5-turbo",
-    });
-
-
-    if (!gptResults.choices){//to
-    }
-    console.log(gptResults.choices?.[0]?.message?.content);
-
-    const resultMovies = gptResults.choices?.[0]?.message?.content.split(",");
-
-    const data = await resultMovies.map((movie)=> searchMovieTMDB(movie));
+    const tmdbResults = await Promise.all(promiseArray);
+    dispatch(addAIMovieResults({movieNames: resultMovies, movieResults: tmdbResults}));
   };
 
   return (
@@ -57,7 +50,7 @@ const GPTSearchBar = () => {
         />
         <button
           className="py-4 m-4 bg-blue-700 text-white rounded-md col-span-3"
-          // onClick={handleGPTSearchClick}
+          onClick={handleAISearchClick}
         >
           {lang[langKey].search}
         </button>

@@ -1,3 +1,5 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 export const LOGO =
   "https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png";
 
@@ -9,7 +11,7 @@ export const API_OPTIONS = {
   headers: {
     accept: "application/json",
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxOTk0Y2I0ODQzZjQxNjBhOGI1MTNmZTU1ZDQ5NzE1NCIsInN1YiI6IjY2Njc0YzkyODU3ZWVlZjRkN2E2OWZmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.5vrxhvp0UXLTyFfUKHImrVpyzmIMqI110BScvoKKceM",
+      "Bearer " + process.env.REACT_APP_TMDB_KEY,
   },
 };
 
@@ -26,5 +28,7 @@ export const SUPPORTED_LANGUAGES = [
   { identifier: "telugu", name: "Telugu" },
 ];
 
-export const OPENAI_KEY = "adgsdgjaiofgjaga"
+// const 
+const genAI= new GoogleGenerativeAI(process.env.REACT_APP_GENAI_KEY);
+export const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
